@@ -31,6 +31,15 @@ def main(argv: list[str] | None = None) -> int:
     load_dotenv(resolve_env_file(Path(args.env_file), repo_root))
 
     if args.demo:
+        if not (repo_root / "examples" / "buggy_math").is_dir():
+            print(
+                "The demo needs the examples/ directory, which ships with the git "
+                "repo but not the installed package. Run it from a clone:\n"
+                "  git clone https://github.com/jaydeepbajwa/bare-agent-loop.git\n"
+                "  cd bare-agent-loop && python3 -m bare_agent --demo",
+                file=sys.stderr,
+            )
+            return 2
         goal = "Triage the failing tests in examples/buggy_math and explain the likely fix."
         model = build_demo_model()
     else:

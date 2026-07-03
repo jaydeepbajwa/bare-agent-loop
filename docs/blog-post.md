@@ -1,6 +1,6 @@
 # Building a Tiny Agent Loop Without Hiding the Loop
 
-Project 0 for Thyme Care used an LLM suggestion queue: free-text symptom notes go in, a structured recommendation comes out, and a human accepts or overrides it. That made the next project obvious. I wanted the smallest possible repo that showed I understand the loop behind an agent instead of outsourcing the interesting parts to a framework.
+My previous project, [care-loop](https://github.com/jaydeepbajwa/care-loop), used an LLM suggestion queue: free-text symptom notes go in, a structured recommendation comes out, and a human accepts or overrides it. That made the next project obvious. I wanted the smallest possible repo that showed I understand the loop behind an agent instead of outsourcing the interesting parts to a framework.
 
 ## What Broke
 
@@ -10,7 +10,7 @@ Tool errors had the same shape. A blocked write, an unknown tool, and a failing 
 
 ## What I Would Redo
 
-The next version would add trace persistence: each model response, tool call, and observation should be saved as a replayable run. That would make debugging easier and would also set up an eval harness, which is Project 3 in this roadmap.
+The next version would add trace persistence: each model response, tool call, and observation should be saved as a replayable run. That would make debugging easier and would also set up the eval harness I want to build next — replayable traces are exactly what you score.
 
 I would also add a summarizer once the message list grows past a threshold. The current version is honest about its limit: it accumulates context until `--max-steps` ends the run.
 

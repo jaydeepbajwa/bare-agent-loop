@@ -44,6 +44,13 @@ class AgentLoop:
         ]
 
         for step in range(1, self.max_steps + 1):
+            # Rebuild the system prompt each step so facts stored via the
+            # `remember` tool are visible to the model on the NEXT step,
+            # not just the next run.
+            messages[0] = {
+                "role": "system",
+                "content": build_system_prompt(self.tools, self.memory.load()),
+            }
             raw = self.model.complete(messages)
             try:
                 action = json.loads(raw)

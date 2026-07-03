@@ -34,6 +34,40 @@ class AgentLoopTests(unittest.TestCase):
             self.assertEqual(len(model.requests), 2)
             self.assertIn("not valid JSON", model.requests[1][-1]["content"])
 
+    def test_remembered_facts_reach_the_next_step_prompt(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            memory = MemoryStore(root / ".memory.json")
+            tools = make_tools(root, memory=memory, allow_write=False)
+            model = ScriptedModel(
+                [
+                    json.dumps(
+                        {
+                            "type": "tool",
+                            "tool": "remember",
+                            "args": {"key": "root_cause", "value": "off-by-one in average()"},
+                            "reason": "Store the diagnosis for later steps.",
+                        }
+                    ),
+                    json.dumps(
+                        {
+                            "type": "final",
+                            "summary": "Diagnosis stored.",
+                            "next_steps": [],
+                        }
+                    ),
+                ]
+            )
+            agent = AgentLoop(model=model, tools=tools, memory=memory, max_steps=3)
+
+            run = agent.run("diagnose and remember")
+
+            self.assertTrue(run.completed)
+            # The system prompt of the SECOND request must already contain the
+            # fact stored during the first step — memory is live within a run.
+            second_system_prompt = model.requests[1][0]["content"]
+            self.assertIn("off-by-one in average()", second_system_prompt)
+
     def test_tool_errors_are_sent_back_to_the_model(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
