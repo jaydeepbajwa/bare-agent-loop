@@ -1,0 +1,16 @@
+[project]
+name = "bare-agent-loop"
+version = "0.1.0"
+description = "A no-framework terminal agent loop for repo triage and file operations."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [{ name = "Jaydeep Bajwa" }]
+dependencies = []
+
+[project.scripts]
+bare-agent = "bare_agent.__main__:main"
+
+[tool.setuptools]
+packages = ["bare_agent"]
+
