@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-labelledby="title desc">
+  <title id="title">Bare Agent Loop demo terminal</title>
+  <desc id="desc">A terminal screenshot showing the demo agent running tests, reading files, and explaining a bug.</desc>
+  <rect width="960" height="560" rx="10" fill="#111827"/>
+  <rect x="0" y="0" width="960" height="42" rx="10" fill="#1f2937"/>
+  <circle cx="24" cy="21" r="7" fill="#f87171"/>
+  <circle cx="48" cy="21" r="7" fill="#fbbf24"/>
+  <circle cx="72" cy="21" r="7" fill="#34d399"/>
+  <text x="96" y="27" fill="#d1d5db" font-family="Menlo, Consolas, monospace" font-size="14">bare-agent-loop demo</text>
+  <g font-family="Menlo, Consolas, monospace" font-size="16" fill="#e5e7eb">
+    <text x="28" y="78">$ python3 -m bare_agent --demo</text>
+    <text x="28" y="112" fill="#93c5fd">goal: Triage the failing tests in examples/buggy_math and explain the likely fix.</text>
+    <text x="28" y="146" fill="#a7f3d0">[1] tool run_command: exit=1</text>
+    <text x="52" y="176" fill="#fca5a5">FAIL: test_average_uses_all_values</text>
+    <text x="52" y="204" fill="#d1d5db">AssertionError: 6.0 != 4</text>
+    <text x="28" y="244" fill="#a7f3d0">[2] tool read_file: examples/buggy_math/calculator.py lines 1-4</text>
+    <text x="52" y="274" fill="#d1d5db">return sum(values) / (len(values) - 1)</text>
+    <text x="28" y="314" fill="#a7f3d0">[3] tool read_file: examples/buggy_math/test_calculator.py lines 1-13</text>
+    <text x="52" y="344" fill="#d1d5db">self.assertEqual(average([2, 4, 6]), 4)</text>
+    <text x="28" y="390" fill="#fde68a">[4] final:</text>
+    <text x="52" y="420" fill="#e5e7eb">average() divides by len(values) - 1, so [2, 4, 6] returns 6.0.</text>
+    <text x="52" y="450" fill="#e5e7eb">The smallest fix is to divide by len(values) and keep the empty-list guard.</text>
+    <text x="52" y="492" fill="#9ca3af">Core behavior: model -&gt; tool -&gt; observation -&gt; next action, with retries.</text>
+  </g>
+</svg>
+
