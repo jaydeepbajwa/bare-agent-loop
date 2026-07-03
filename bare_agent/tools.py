@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import subprocess
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable
@@ -106,7 +107,7 @@ def make_tools(root: Path, memory, allow_write: bool = False) -> dict[str, Tool]
             "rg",
         }
         executable = Path(argv[0]).name
-        if executable not in allowed and Path(argv[0]).resolve() != Path(os.sys.executable).resolve():
+        if executable not in allowed and Path(argv[0]).resolve() != Path(sys.executable).resolve():
             raise ToolError(
                 f"Command '{argv[0]}' is not allowed. Allowed executables: {sorted(allowed)}."
             )
@@ -205,4 +206,3 @@ def make_tools(root: Path, memory, allow_write: bool = False) -> dict[str, Tool]
             call=remember,
         ),
     }
-

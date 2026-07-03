@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 
 
-CHECKED_DIRS = ("bare_agent", "scripts", "tests")
+CHECKED_DIRS = ("bare_agent", "examples", "scripts", "tests")
 
 
 def main() -> int:
@@ -32,4 +32,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

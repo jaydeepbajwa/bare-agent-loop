@@ -16,6 +16,13 @@ python3 -m bare_agent --demo
 
 The demo is deterministic and does not need an API key. It runs a failing test suite in `examples/buggy_math`, reads the relevant files, and explains the bug.
 
+Optional editable install:
+
+```bash
+python3 -m pip install -e .
+bare-agent --demo
+```
+
 ## Real LLM Run
 
 ```bash
@@ -50,7 +57,7 @@ Use `--allow-write` only when you want the agent to modify files. Without it, th
 
 ```bash
 python3 scripts/lint.py
-python3 -m compileall bare_agent tests
+python3 -m compileall bare_agent examples scripts tests
 python3 -m unittest discover -s tests -p "test_*.py"
 ```
 

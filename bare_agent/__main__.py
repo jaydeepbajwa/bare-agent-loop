@@ -27,14 +27,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--model", default=None, help="Override OPENAI_MODEL for real LLM runs.")
     args = parser.parse_args(argv)
 
-    load_dotenv(Path(args.env_file))
+    repo_root = Path(__file__).resolve().parents[1] if args.demo else Path(args.repo).resolve()
+    load_dotenv(resolve_env_file(Path(args.env_file), repo_root))
 
     if args.demo:
-        repo_root = Path(__file__).resolve().parents[1]
         goal = "Triage the failing tests in examples/buggy_math and explain the likely fix."
         model = build_demo_model()
     else:
-        repo_root = Path(args.repo).resolve()
         goal = " ".join(args.goal).strip()
         if not goal:
             parser.error("provide a goal or use --demo")
@@ -44,7 +43,8 @@ def main(argv: list[str] | None = None) -> int:
         if not api_key:
             print(
                 "OPENAI_API_KEY is missing. Copy .env.example to .env, set a key, "
-                "or run python3 -m bare_agent --demo.",
+                "or run python3 -m bare_agent --demo. Relative env files are checked "
+                "from the current directory first, then from --repo.",
                 file=sys.stderr,
             )
             return 2
@@ -67,9 +67,24 @@ def main(argv: list[str] | None = None) -> int:
     return 0 if run.completed else 1
 
 
-def load_dotenv(path: Path) -> None:
-    if not path.exists():
-        return
+def resolve_env_file(path: Path, repo_root: Path) -> Path | None:
+    if path.is_absolute():
+        return path if path.exists() else None
+
+    current_directory_candidate = path.resolve()
+    if current_directory_candidate.exists():
+        return current_directory_candidate
+
+    repo_candidate = (repo_root / path).resolve()
+    if repo_candidate.exists():
+        return repo_candidate
+
+    return None
+
+
+def load_dotenv(path: Path | None) -> bool:
+    if path is None:
+        return False
     for raw_line in path.read_text(encoding="utf-8").splitlines():
         line = raw_line.strip()
         if not line or line.startswith("#") or "=" not in line:
@@ -78,6 +93,7 @@ def load_dotenv(path: Path) -> None:
         key = key.strip()
         value = value.strip().strip('"').strip("'")
         os.environ.setdefault(key, value)
+    return True
 
 
 def format_event(index: int, event: AgentEvent) -> str:
@@ -119,4 +135,3 @@ def _indent(text: str) -> str:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

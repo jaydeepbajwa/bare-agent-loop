@@ -17,7 +17,7 @@ jobs:
           python-version: "3.12"
 
       - name: Compile package
-        run: python -m compileall bare_agent tests
+        run: python -m compileall bare_agent examples scripts tests
 
       - name: Run lint
         run: python scripts/lint.py
