@@ -86,6 +86,8 @@ python3 -m unittest discover -s tests -p "test_*.py"
 
 The lint script intentionally stays stdlib-only: it parses Python files and rejects tabs/trailing whitespace. The core invariant under test is recovery behavior: bad model output and tool errors should produce useful next observations rather than crashing the run. The HTTP client's failure modes (auth errors, network failures, unexpected response shapes) are tested against mocked responses — every one must map to an error message that names the setting to check.
 
+Beyond unit tests, this agent has an external eval suite: [agent-evals](https://github.com/jaydeepbajwa/agent-evals) runs it against fixture repos (a failing test to triage, a buried TODO to find, a module to explain) and catches regressions between prompt or model versions.
+
 ## Honest Limits
 
 - This is a learning-sized agent, not a production coding assistant.
